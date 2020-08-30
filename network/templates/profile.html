@@ -1,0 +1,33 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+	<div class="container" id="profilecont">
+		<div class="card text-center w-75">
+		  <div class="card-header">
+		  	{% if flag == 0 %}
+		  		<button id="follow" type="button" class="btn btn-outline-primary" data-name="{{username}}">Follow</button>
+		  	{% else %}
+		  		<h4>Your Profile</h4>
+		  	{% endif %}
+		  </div>
+		  <div class="card-body">
+		    <h5 class="card-title">{{username}}</h5>
+		    <p class="card-text">Followers: <span id="followers">{{follower}}</span> | Following: <span id="following">{{following}}</span></p>
+		  </div>
+		</div>
+		{% if allpost %}
+	    	{% for post in allpost reversed%}
+	    		<div class="card postbox">
+	    			<div class="card-body">
+    					<a href="{% url 'profile' post.postadmin %}"><h5 class="card-title">{{post.postadmin}}</h5></a>
+    					<p class="card-text"><strong>{{post.post}}</strong></p>
+    					<h6 class="card-subtitle mb-2 text-muted">{{post.postdate}}</h6>
+    					<div id="like" data-postid="{{post.id}}" data-likes="{{post.likes}}" data-username="{{post.postadmin}}" class="fa fa-heart unactive"></div><span id="p{{post.id}}">{{post.likes}}</span>
+	    			</div>
+	    		</div>
+	    	{% endfor %}
+    	{% else %}
+    		<h3>No posts to show. </h3>
+    	{% endif %}
+	</div>
+{% endblock %}

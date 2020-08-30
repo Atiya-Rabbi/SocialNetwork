@@ -1,0 +1,80 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="container" id="allpostcont">
+    	<h1>All Posts</h1>
+    	{% if flag == 0%}
+	    	{% if user.is_authenticated %}
+		    	<form action="{% url 'newpost' user.username %}" method="post" id="npostform">
+		    		{% csrf_token %}
+		    		<div class="card">
+			    		<div class="form-group card-body">
+			    			<label for="post"><strong>New Post</strong></label>
+			    			<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" required name="newpost"></textarea>
+			    			<input class="btn btn-primary" type="submit" value="Post">
+						</div>
+		    		</div>
+		    	</form>
+		    {% endif %}
+
+		    {% if page_obj %}
+		    	{% for post in page_obj %}
+		    		<div class="card postbox">
+		    			<div class="card-body unedit" id="postdiv{{post.id}}">
+	    					<a href="{% url 'profile' post.postadmin %}"><h5 class="card-title">{{post.postadmin|upper}}</h5></a>
+	    					<p class="card-text"><strong id="posttext{{post.id}}">{{post.post}}</strong></p>
+	    					<h6 class="card-subtitle mb-2 text-muted">{{post.postdate}}</h6>
+	    					<div id="like" data-postid="{{post.id}}" data-likes="{{post.likes}}" data-username="{{post.postadmin}}" class="fa fa-heart unactive"></div><span id="p{{post.id}}">{{post.likes}}</span>
+	    					{% if post.postadmin == username %}
+	    						<button type="button" class="btn btn-light" data-username="{{post.postadmin}}" data-postid="{{post.id}}" id="editpost">Edit Post</button>
+	    					{% endif %}
+		    			</div>
+		    			<div class="card-body edit" id="editpostdiv{{post.id}}">
+		    				<textarea class="form-control" rows="3" id="textarea{{post.id}}">{{post.post}}</textarea>
+		    				<input type="submit" value="Save" class="btn btn-primary" id="savebtn{{post.id}}">
+		    				<button class="btn btn-primary" id="cancelbtn{{post.id}}">Cancel</button>
+		    			</div>
+		    		</div>
+		    	{% endfor %}
+    				<form id="formEle">
+    				</form>
+	    	{% else %}
+	    		<h3>No posts to show. </h3>
+	    	{% endif %}
+    	{% else %}
+    		{% if page_obj %}
+		    	{% for post in page_obj %}
+			    	{% if post.postadmin in following %}
+			    		<div class="card postbox">
+			    			<div class="card-body">
+		    					<a href="{% url 'profile' post.postadmin %}"><h5 class="card-title">{{post.postadmin|upper}}</h5></a>
+		    					<p class="card-text"><strong>{{post.post}}</strong></p>
+		    					<h6 class="card-subtitle mb-2 text-muted">{{post.postdate}}</h6>
+		    					<div id="like" data-postid="{{post.id}}" data-likes="{{post.likes}}" data-username="{{post.postadmin}}" class="fa fa-heart unactive"></div><span id="p{{post.id}}">{{post.likes}}</span>
+			    			</div>
+			    		</div>
+		    		{% endif %}
+		    	{% endfor %}
+    		{% else %}
+    			<h3>No posts to show. </h3>
+	    	{% endif %}
+    	{% endif %}
+    	<div class="pagination">
+		    <span class="step-links">
+		        {% if page_obj.has_previous %}
+		            <a href="?page=1">&laquo; first</a>
+		            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+		        {% endif %}
+
+		        <span class="current">
+		            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+		        </span>
+
+		        {% if page_obj.has_next %}
+		            <a href="?page={{ page_obj.next_page_number }}">next</a>
+		            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+		        {% endif %}
+		    </span>
+		</div>
+    </div>
+{% endblock %}
