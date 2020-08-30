@@ -1,0 +1,27 @@
+.postbox{
+	margin-top: 10px;
+}
+
+.active{
+	color: red;
+}
+
+.unactive, .active{
+	cursor: pointer;
+}
+
+#allpostcont{
+	padding-left: 100px;
+}
+
+.edit{
+	display: none;
+}
+
+.unedit{
+	display: block;
+}
+
+#editpostform{
+	color: yellow;
+}
